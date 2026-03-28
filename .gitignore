@@ -1,9 +1,6 @@
-# Large model files (>100 MB) — download or retrain locally
+# Large model files (>100 MB) — retrain locally
 models/gender_prediction_model_rf.pkl
 models/race_prediction_model_rf.pkl
-
-# Raw SSA yearly files (~23 MB total, 142 files) — download from SSA website
-data/raw/gender/names_till_2021/
 
 # OS files
 .DS_Store
