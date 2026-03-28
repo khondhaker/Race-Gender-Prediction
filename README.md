@@ -232,9 +232,32 @@ Key improvements over baseline:
 
 ---
 
-## Citation / Attribution
+## Citation
 
-If you use this code or data pipeline in research, please cite the SSA and Census data sources directly and acknowledge the OU TRICS Lab.
+If you use this repository in your research, please cite it as:
+
+> Momin, K. A. (2026). *Race and Gender Prediction from Names Using Machine Learning* [Computer software]. OU TRICS Lab. https://github.com/khondhaker/Race-Gender-Prediction
+
+**BibTeX:**
+
+```bibtex
+@software{momin2026racegender,
+  author       = {Momin, Khondhaker Al},
+  title        = {Race and Gender Prediction from Names Using Machine Learning},
+  year         = {2026},
+  publisher    = {GitHub},
+  url          = {https://github.com/khondhaker/Race-Gender-Prediction},
+  note         = {OU TRICS Lab}
+}
+```
+
+### Data Sources
+
+Please also cite the original data providers:
+
+> U.S. Social Security Administration. (2022). *Beyond the top 1000 names: National data* [Data set]. https://www.ssa.gov/oact/babynames/limits.html
+
+> U.S. Census Bureau. (2010). *Frequently occurring surnames from the 2010 Census* [Data set]. https://www.census.gov/topics/population/genealogy/data/2010_surnames.html
 
 ---
 
