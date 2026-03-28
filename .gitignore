@@ -1,7 +1,3 @@
-# Large model files (>100 MB) — retrain locally
-models/gender_prediction_model_rf.pkl
-models/race_prediction_model_rf.pkl
-
 # OS files
 .DS_Store
 **/.DS_Store

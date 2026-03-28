@@ -25,14 +25,12 @@ NameDemographics-ML/
 │       └── Modified_Race_last_name.csv          # Cleaned race-labelled surnames (162,251 rows)
 │
 ├── models/
-│   ├── gender_prediction_model_rf.pkl    # Random Forest — Gender  (baseline, Dec 2023)
-│   ├── race_prediction_model_rf.pkl      # Random Forest — Race    (baseline, Dec 2023)
-│   ├── svm_gender_model_Nov_2024.pkl.gz  # SVM — Gender (427 KB lightweight alternative)
-│   ├── gender_tfidf_vectorizer.pkl       # TF-IDF vectorizer for first names (improved)
-│   ├── gender_lgbm_model.pkl             # LightGBM — Gender (improved)
-│   ├── race_tfidf_vectorizer.pkl         # TF-IDF vectorizer for surnames   (improved)
-│   ├── race_lgbm_model.pkl              # LightGBM — Race   (improved)
-│   └── race_label_encoder.pkl            # LabelEncoder for race classes (shared)
+│   ├── gender_tfidf_vectorizer.pkl       # TF-IDF vectorizer for first names
+│   ├── gender_lgbm_model.pkl             # LightGBM — Gender
+│   ├── race_tfidf_vectorizer.pkl         # TF-IDF vectorizer for surnames
+│   ├── race_lgbm_model.pkl              # LightGBM — Race (unweighted)
+│   ├── race_lgbm_model_balanced.pkl     # LightGBM — Race (balanced, better minority recall)
+│   └── race_label_encoder.pkl            # LabelEncoder for race classes
 │
 ├── notebooks/
 │   ├── 01_data_preparation.ipynb                # Merge SSA files, clean race data, visualise
@@ -70,8 +68,8 @@ pip install -r requirements.txt
 | `04_inference_pipeline.ipynb` | Predict on new names using saved models |
 | `05_improved_models_lightgbm.ipynb` | Train LightGBM with TF-IDF char n-grams |
 
-> Pre-trained RF models are already included in `models/`. You can run notebook 04 directly without retraining.
-> To generate the improved LightGBM models, run notebook 05 first.
+> Pre-trained LightGBM models are included in `models/`. You can run notebook 04 directly without retraining.
+> To retrain, run notebooks 01 → 05 in order.
 
 ### 3. Single prediction (Python)
 
@@ -96,27 +94,6 @@ print(f'{first_name} {last_name}  →  Gender: {gender},  Race: {race}')
 # Jennifer Garcia  →  Gender: F,  Race: hispanic
 ```
 
-<details>
-<summary>RF baseline (click to expand)</summary>
-
-```python
-import numpy as np, joblib
-
-LETTERS = list('abcdefghijklmnopqrstuvwxyz')
-def name_to_features(name):
-    return np.array([name.lower().count(ch) for ch in LETTERS]).reshape(1, -1)
-
-gender_model = joblib.load('models/gender_prediction_model_rf.pkl')
-race_model   = joblib.load('models/race_prediction_model_rf.pkl')
-race_le      = joblib.load('models/race_label_encoder.pkl')
-
-first_name, last_name = 'Jennifer', 'Garcia'
-gender = gender_model.predict(name_to_features(first_name))[0]
-race   = race_le.inverse_transform(race_model.predict(name_to_features(last_name)))[0]
-print(f'{first_name} {last_name}  →  Gender: {gender},  Race: {race}')
-```
-
-</details>
 
 ---
 
@@ -201,14 +178,12 @@ Key improvements over baseline:
 
 | File | Type | Notes |
 |---|---|---|
-| `gender_prediction_model_rf.pkl` | RF baseline | 299 MB, 26 features |
-| `race_prediction_model_rf.pkl` | RF baseline | 560 MB, 26 features |
-| `svm_gender_model_Nov_2024.pkl.gz` | SVM baseline | 427 KB, 26 features |
-| `gender_lgbm_model.pkl` | **LightGBM (improved)** | 8,000 TF-IDF features |
-| `race_lgbm_model.pkl` | **LightGBM (improved)** | 12,000 TF-IDF features |
-| `gender_tfidf_vectorizer.pkl` | TF-IDF vectorizer | Required for LightGBM gender |
-| `race_tfidf_vectorizer.pkl` | TF-IDF vectorizer | Required for LightGBM race |
-| `race_label_encoder.pkl` | LabelEncoder | Shared across all race models |
+| `gender_lgbm_model.pkl` | LightGBM | Gender classifier, 8,000 TF-IDF features |
+| `race_lgbm_model.pkl` | LightGBM | Race classifier (unweighted), 12,000 TF-IDF features |
+| `race_lgbm_model_balanced.pkl` | LightGBM | Race classifier (balanced), better minority recall |
+| `gender_tfidf_vectorizer.pkl` | TF-IDF vectorizer | Required for gender prediction |
+| `race_tfidf_vectorizer.pkl` | TF-IDF vectorizer | Required for race prediction |
+| `race_label_encoder.pkl` | LabelEncoder | Maps encoded labels to race strings |
 
 > **Imbalance note:** 82% of training surnames are labelled *white*. Per-class accuracy for minority groups (americanindian, black, asian) is lower. The LightGBM model with class weights mitigates this but does not eliminate it.
 
