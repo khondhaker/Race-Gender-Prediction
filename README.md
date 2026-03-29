@@ -1,4 +1,4 @@
-# NameDemographics-ML
+# Race-Gender Prediction Model
 
 Predict **Gender** (M / F) and **Race** (white | hispanic | asian | black | americanindian) from first and last names using classical machine learning.
 
