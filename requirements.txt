@@ -4,7 +4,6 @@ scikit-learn>=1.2
 joblib>=1.2
 matplotlib>=3.6
 seaborn>=0.12
-xgboost>=1.7
 lightgbm>=3.3
 jupyterlab>=3.6
 ipykernel>=6.0
